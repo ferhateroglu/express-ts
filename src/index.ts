@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { dataSource } from './config/database';
-import userRouter from './routes/user.router';
+import { userRouter } from './routes';
 import { retry } from './utils';
 
 dotenv.config();

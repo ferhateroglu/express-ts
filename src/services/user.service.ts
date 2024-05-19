@@ -1,6 +1,6 @@
 import { DataSource, Repository } from 'typeorm';
 import { User, Book, UserBook } from '../entities';
-import { ServiceErrorHandler } from '../utils';
+// import { ServiceErrorHandler } from '../utils';
 
 class UserService {
   private dataSource: DataSource;
@@ -64,4 +64,4 @@ class UserService {
   }
 }
 
-export default UserService;
+export { UserService };

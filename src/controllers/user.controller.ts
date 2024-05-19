@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import UserService from '../services/user.service';
+import { UserService } from '../services';
 import { dataSource } from '../config/database';
 import BaseController from './base.controller';
 
