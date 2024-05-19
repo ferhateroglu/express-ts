@@ -10,4 +10,4 @@ function autoBind(instance: any) {
   });
 }
 
-export default autoBind;
+export { autoBind };

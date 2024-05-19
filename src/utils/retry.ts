@@ -15,4 +15,4 @@ const retry = async (fn: () => Promise<void>, retries: number, delay: number) =>
   }
 };
 
-export default retry;
+export { retry };
