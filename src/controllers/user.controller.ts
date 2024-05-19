@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserService } from '../services';
-import { dataSource } from '../config/database';
+import dataSource from '../db/data-source';
 import BaseController from './base.controller';
 
 class UserController extends BaseController {

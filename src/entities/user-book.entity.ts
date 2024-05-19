@@ -14,13 +14,11 @@ export class UserBook extends BaseEntity {
   @ManyToOne(() => Book, (book) => book.userBooks)
   book: Book;
 
-  // TODO: open this line after move sqlitedb to postgres
-  // @Column({
-  //   type: 'enum',
-  //   enum: ['past', 'present'],
-  // })
-  @Column()
-  status: string; // 'past' | 'present';
+  @Column({
+    type: 'enum',
+    enum: ['past', 'present'],
+  })
+  status: string;
 
   @Column({
     type: 'int',
