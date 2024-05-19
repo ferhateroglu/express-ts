@@ -1,4 +1,4 @@
-import autoBind from '../utils/autoBind';
+import autoBind from '../utils/auto-bind';
 
 class BaseController {
   constructor() {
