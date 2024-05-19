@@ -8,7 +8,7 @@ const errorMiddleware = (err: any, req: Request, res: Response, next: NextFuncti
     success: false,
     status: errStatus,
     message: errMsg,
-    stack: process.env.NODE_ENV === 'development' ? err.stack : {},
+    stack: process.env.NODE_ENV === 'development' ? err.stack : null,
   });
 
   next();

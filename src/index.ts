@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { dataSource } from './config/database';
 import { userRouter } from './routes';
-import { retry } from './utils';
+import { retry, HttpError } from './utils';
 import { errorMiddleware } from './middlewares';
 
 dotenv.config();
@@ -12,6 +12,11 @@ app.use(express.json());
 
 // Routes
 app.use('/users', userRouter);
+
+// Not found middleware
+app.use(() => {
+  throw new HttpError('Not found', 404);
+});
 
 // Error handling middleware
 app.use(errorMiddleware);
