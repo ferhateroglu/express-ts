@@ -1,24 +1,24 @@
-import { Request, Response } from 'express';
-import { User } from '../entities/User';
-import { Repository, DataSource } from 'typeorm';
+import { Request, Response, NextFunction } from 'express';
+import UserService from '../services/UserService';
+import { dataSource } from '../config/database';
+import BaseController from './BaseController';
 
-export class UserController {
-  private userRepository: Repository<User>;
+class UserController extends BaseController {
+  private userService: UserService;
 
-  constructor(dataSource: DataSource) {
-    this.userRepository = dataSource.getRepository(User);
+  constructor() {
+    super();
+    this.userService = new UserService(dataSource);
   }
 
-  async index(req: Request, res: Response) {
-    const users = await this.userRepository.find();
-    res.send(users);
-  }
-
-  async create(req: Request, res: Response) {
-    const user = new User();
-    user.name = req.body.name;
-
-    await this.userRepository.save(user);
-    res.send(user);
+  async createUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = await this.userService.createUser(req.body);
+      res.status(201).json(user);
+    } catch (error) {
+      next(error);
+    }
   }
 }
+
+export default new UserController();

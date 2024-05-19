@@ -5,30 +5,26 @@ import { dataSource } from './config/database';
 dotenv.config();
 
 // import routes
-import { UserRouter } from './routes/userRoutes';
-
-// create router instances
-const userRouter = new UserRouter(dataSource);
-
-// initialize the data source
-dataSource
-  .initialize()
-  .then(() => {
-    console.log('Data Source has been initialized!');
-  })
-  .catch((err: Error) => {
-    console.error('Error during Data Source initialization:', err);
-  });
+import userRouter from './routes/userRoutes';
 
 // create express app
 const app = express();
 app.use(express.json());
 
 // attach routes
-app.use('/users', userRouter.attach());
+app.use('/users', userRouter);
 
-// start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+// initialize the data source
+dataSource
+  .initialize()
+  .then(() => {
+    const port = process.env.PORT || 3000;
+    // Start the server after the data source has been initialized
+    app.listen(port, () => {
+      console.log(`Server running on http://localhost:${port}`);
+    });
+  })
+  .catch((err: Error) => {
+    console.error(err);
+    process.exit(1);
+  });

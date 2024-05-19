@@ -1,24 +1,8 @@
-import express from 'express';
-import { UserController } from '../controllers/UserController';
-import { DataSource } from 'typeorm';
+import { Router } from 'express';
+import userController from '../controllers/UserController';
 
-// import type request and response
-import { Request, Response } from 'express';
+const router = Router();
 
-export class UserRouter {
-  private userController: UserController;
+router.post('/users', userController.createUser);
 
-  constructor(dataSource: DataSource) {
-    this.userController = new UserController(dataSource);
-  }
-
-  attach() {
-    const router = express.Router();
-    router.get('/ping', this.ping.bind(this));
-    return router;
-  }
-
-  private ping(req: Request, res: Response) {
-    return res.send('pong');
-  }
-}
+export default router;
