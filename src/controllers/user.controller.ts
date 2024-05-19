@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import UserService from '../services/UserService';
 import { dataSource } from '../config/database';
-import BaseController from './BaseController';
+import BaseController from './base.controller';
 
 class UserController extends BaseController {
   private userService: UserService;

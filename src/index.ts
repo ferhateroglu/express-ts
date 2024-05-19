@@ -5,7 +5,7 @@ import { dataSource } from './config/database';
 dotenv.config();
 
 // import routes
-import userRouter from './routes/userRoutes';
+import userRouter from './routes/user.router';
 
 // create express app
 const app = express();
