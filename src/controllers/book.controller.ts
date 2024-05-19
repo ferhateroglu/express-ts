@@ -30,7 +30,6 @@ class BookController extends BaseController {
       const books = await this.bookService.getAllBooks();
       res.status(200).json({
         success: true,
-        message: 'Books retrieved successfully',
         data: books,
       });
     } catch (error) {
@@ -42,9 +41,9 @@ class BookController extends BaseController {
     try {
       const { id } = req.params;
       const book = await this.bookService.getBookById(Number(id));
+
       res.status(200).json({
         success: true,
-        message: 'Book retrieved successfully',
         data: book,
       });
     } catch (error) {

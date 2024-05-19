@@ -47,14 +47,15 @@ class UserService {
     const presentBooks: { name: string }[] = [];
 
     user.forEach((entry) => {
+      console.log(entry);
       if (entry.status === 'past') {
         pastBooks.push({
-          name: entry.bookName,
-          userScore: entry.userScore,
+          name: entry.bookname,
+          userScore: entry.userscore,
         });
       } else if (entry.status === 'present') {
         presentBooks.push({
-          name: entry.bookName,
+          name: entry.bookname,
         });
       }
     });

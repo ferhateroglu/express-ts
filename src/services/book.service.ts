@@ -33,6 +33,8 @@ class BookService {
     if (!book) {
       throw new HttpError('Book not found', 404);
     }
+
+    book.score = Number(book.score)?.toFixed(1);
     return book;
   }
 }

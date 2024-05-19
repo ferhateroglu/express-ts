@@ -27,7 +27,10 @@ class UserController extends BaseController {
   async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
       const users = await this.userService.getAllUsers();
-      res.json(users);
+      res.json({
+        success: true,
+        data: users,
+      });
     } catch (error) {
       next(error);
     }
@@ -47,8 +50,11 @@ class UserController extends BaseController {
 
   async borrowBook(req: Request, res: Response, next: NextFunction) {
     try {
-      const userBook = await this.userService.borrowBook(Number(req.params.userId), Number(req.params.bookId));
-      res.json(userBook);
+      await this.userService.borrowBook(Number(req.params.userId), Number(req.params.bookId));
+      res.json({
+        success: true,
+        message: 'Book borrowed',
+      });
     } catch (error) {
       console.log('error in borrowBook');
       next(error);
@@ -59,15 +65,10 @@ class UserController extends BaseController {
     try {
       const { userId, bookId } = req.params;
       const { score } = req.body;
-      const userBook = await this.userService.returnBook(
-        Number(userId),
-        Number(bookId),
-        score ? Number(score) : undefined,
-      );
+      await this.userService.returnBook(Number(userId), Number(bookId), score ? Number(score) : undefined);
       res.json({
         success: true,
         message: 'Book returned',
-        data: userBook,
       });
     } catch (error) {
       next(error);
