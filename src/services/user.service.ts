@@ -17,8 +17,7 @@ class UserService {
 
   async createUser(userData: any) {
     const user = this.userRepository.create(userData);
-    await this.userRepository.save(user);
-    return user;
+    return this.userRepository.save(user);
   }
 
   async getAllUsers() {
@@ -26,10 +25,48 @@ class UserService {
   }
 
   async getUserById(id: number) {
-    return this.userRepository.findOne({
-      where: { id },
-      relations: ['userBooks'],
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.userBooks', 'userBook')
+      .leftJoinAndSelect('userBook.book', 'book')
+      .where('user.id = :id', { id })
+      .select([
+        'user.id as id',
+        'user.name as name',
+        'userBook.status as status',
+        'book.name as bookName',
+        'userBook.userScore as userScore',
+      ])
+      .getRawMany();
+
+    if (!user || user.length === 0) {
+      throw new HttpError('User not found', 404);
+    }
+
+    const pastBooks: { name: string; userScore: number }[] = [];
+    const presentBooks: { name: string }[] = [];
+
+    user.forEach((entry) => {
+      if (entry.status === 'past') {
+        pastBooks.push({
+          name: entry.bookName,
+          userScore: entry.userScore,
+        });
+      } else if (entry.status === 'present') {
+        presentBooks.push({
+          name: entry.bookName,
+        });
+      }
     });
+
+    return {
+      id: user[0].id,
+      name: user[0].name,
+      books: {
+        past: pastBooks,
+        present: presentBooks,
+      },
+    };
   }
 
   async borrowBook(userId: number, bookId: number) {
@@ -38,6 +75,11 @@ class UserService {
 
     if (!user || !book) {
       throw new HttpError('User or book not found', 404);
+    }
+
+    const isAvailable = await this.isBookAvailable(bookId);
+    if (!isAvailable) {
+      throw new HttpError('Book is not available', 400);
     }
 
     const userBook = this.userBookRepository.create({
@@ -50,7 +92,7 @@ class UserService {
     return this.userBookRepository.save(userBook);
   }
 
-  async returnBook(userId: number, bookId: number) {
+  async returnBook(userId: number, bookId: number, score?: number) {
     const userBook = await this.userBookRepository.findOne({
       where: { user: { id: userId }, book: { id: bookId }, status: 'present' },
     });
@@ -60,7 +102,16 @@ class UserService {
     }
 
     userBook.status = 'past';
+    userBook.userScore = score || null;
     return this.userBookRepository.save(userBook);
+  }
+
+  private async isBookAvailable(bookId: number) {
+    const borrowedBook = await this.userBookRepository.findOne({
+      where: { book: { id: bookId }, status: 'present' },
+    });
+
+    return !borrowedBook;
   }
 }
 

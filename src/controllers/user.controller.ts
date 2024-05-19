@@ -14,7 +14,11 @@ class UserController extends BaseController {
   async create(req: Request, res: Response, next: NextFunction) {
     try {
       const user = await this.userService.createUser(req.body);
-      res.status(201).json(user);
+      res.status(201).json({
+        success: true,
+        message: 'User created',
+        data: user,
+      });
     } catch (error) {
       next(error);
     }
@@ -46,18 +50,29 @@ class UserController extends BaseController {
       const userBook = await this.userService.borrowBook(Number(req.params.userId), Number(req.params.bookId));
       res.json(userBook);
     } catch (error) {
+      console.log('error in borrowBook');
       next(error);
     }
   }
 
   async returnBook(req: Request, res: Response, next: NextFunction) {
     try {
-      const userBook = await this.userService.returnBook(Number(req.params.userId), Number(req.params.bookId));
-      res.json(userBook);
+      const { userId, bookId } = req.params;
+      const { score } = req.body;
+      const userBook = await this.userService.returnBook(
+        Number(userId),
+        Number(bookId),
+        score ? Number(score) : undefined,
+      );
+      res.json({
+        success: true,
+        message: 'Book returned',
+        data: userBook,
+      });
     } catch (error) {
       next(error);
     }
   }
 }
 
-export default new UserController();
+export { UserController };
