@@ -1,6 +1,6 @@
 import { DataSource, Repository } from 'typeorm';
 import { User, Book, UserBook } from '../entities';
-// import { ServiceErrorHandler } from '../utils';
+import { HttpError } from '../utils';
 
 class UserService {
   private dataSource: DataSource;
@@ -37,7 +37,7 @@ class UserService {
     const book = await this.bookRepository.findOne({ where: { id: bookId } });
 
     if (!user || !book) {
-      return null;
+      throw new HttpError('User or book not found', 404);
     }
 
     const userBook = this.userBookRepository.create({
@@ -56,7 +56,7 @@ class UserService {
     });
 
     if (!userBook) {
-      throw new Error('Borrowed book not found for this user');
+      throw new HttpError('Borrowed book not found for this user', 404);
     }
 
     userBook.status = 'past';

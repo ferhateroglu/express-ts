@@ -3,12 +3,18 @@ import dotenv from 'dotenv';
 import { dataSource } from './config/database';
 import { userRouter } from './routes';
 import { retry } from './utils';
+import { errorMiddleware } from './middlewares';
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+
+// Routes
 app.use('/users', userRouter);
+
+// Error handling middleware
+app.use(errorMiddleware);
 
 const startServer = async () => {
   const connectToDatabase = async () => {
