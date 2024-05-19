@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { dataSource } from './config/database';
-import { userRouter } from './routes';
+import { userRouter, bookRouter } from './routes';
 import { retry, HttpError } from './utils';
 import { errorMiddleware } from './middlewares';
 
@@ -12,6 +12,7 @@ app.use(express.json());
 
 // Routes
 app.use('/users', userRouter);
+app.use('/books', bookRouter);
 
 // Not found middleware
 app.use(() => {
