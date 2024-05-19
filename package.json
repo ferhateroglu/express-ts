@@ -6,8 +6,12 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "nodemon src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "NODE_ENV=development nodemon src/index.ts",
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "migration:create": "npm run typeorm -- migration:create ./src/db/migrations/$npm_config_name",
+    "migration:generate": "npm run typeorm -- -d ./src/db/data-source.ts migration:generate ./src/db/migrations/$npm_config_name",
+    "migration:run": "npm run typeorm migration:run -- -d ./src/db/data-source.ts",
+    "migration:revert": "npm run typeorm -- -d ./src/db/data-source.ts migration:revert"
   },
   "keywords": [],
   "author": "",
@@ -29,7 +33,7 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "sqlite3": "^5.1.7",
+    "pg": "^8.11.5",
     "typeorm": "^0.3.20"
   }
 }
