@@ -16,12 +16,12 @@ if (process.env.NODE_ENV === 'production') {
   });
 } else {
   dataSource = new DataSource({
-    type: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    username: 'postgres',
-    password: '123456',
-    database: 'case-library',
+    type: process.env.DB_TYPE || ('postgres' as any),
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT ? +process.env.DB_PORT : 5432,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
     synchronize: false,
     logging: true,
     entities: ['src/**/*.entity{.ts,.js}'],

@@ -1,11 +1,11 @@
-import express from 'express';
 import dotenv from 'dotenv';
+dotenv.config();
+
+import express from 'express';
 import dataSource from './db/data-source';
 import { userRouter, bookRouter } from './routes';
 import { retry, HttpError } from './utils';
 import { errorMiddleware } from './middlewares';
-
-dotenv.config();
 
 const app = express();
 app.use(express.json());
